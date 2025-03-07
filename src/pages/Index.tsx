@@ -8,7 +8,7 @@ const pages: PageContent[] = [
     type: 'cover',
     title: 'A Tribute to Nirjana Mam',
     content: 'With love and gratitude from Kaulii Gang',
-    imageUrl: 'https://i.ibb.co/9HMCFV/467170439-1213288213116320-3431643718854136907-n.jpg',
+    imageUrl: 'https://i.ibb.co/9HMCFt0V/467170439-1213288213116320-3431643718854136907-n.jpg',
     imageAlt: 'Kaulii Gang with Nirjana Mam'
   },
   {
@@ -58,7 +58,7 @@ const pages: PageContent[] = [
     type: 'cover',
     title: 'Forever Grateful',
     content: 'With love and admiration, The Kaulii Gang',
-    imageUrl: 'https://i.ibb.co/9HMCFV/467170439-1213288213116320-3431643718854136907-n.jpg',
+    imageUrl: 'https://i.ibb.co/9HMCFt0V/467170439-1213288213116320-3431643718854136907-n.jpg',
     imageAlt: 'Kaulii Gang with Nirjana Mam'
   }
 ];
