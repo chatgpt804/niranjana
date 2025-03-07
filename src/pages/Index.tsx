@@ -27,7 +27,7 @@ const pages: PageContent[] = [
     id: 4,
     type: 'text',
     title: 'Lessons That Last a Lifetime',
-    content: 'The lessons we learned from you extend far beyond textbooks and examinations. You taught us the importance of perseverance, integrity, and kindness.\n\nYou showed us that making mistakes is part of learning, and that what truly matters is how we grow from them.\n\nYour classroom was a safe space where we felt valued, heard, and inspired to be our best selves.\n\nThe knowledge you imparted with such passion will continue to guide us through life's challenges and opportunities.\n\nFor these invaluable lessons, we are eternally grateful.'
+    content: 'The lessons we learned from you extend far beyond textbooks and examinations. You taught us the importance of perseverance, integrity, and kindness.\n\nYou showed us that making mistakes is part of learning, and that what truly matters is how we grow from them.\n\nYour classroom was a safe space where we felt valued, heard, and inspired to be our best selves.\n\nThe knowledge you imparted with such passion will continue to guide us through life\'s challenges and opportunities.\n\nFor these invaluable lessons, we are eternally grateful.'
   },
   {
     id: 5,
@@ -56,7 +56,7 @@ const pages: PageContent[] = [
     type: 'cover',
     title: 'Forever Grateful',
     content: 'With love and admiration, The Kaulii Gang'
-  },
+  }
 ];
 
 const Index = () => {
