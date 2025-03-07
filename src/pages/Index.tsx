@@ -8,8 +8,8 @@ const pages: PageContent[] = [
     type: 'cover',
     title: 'A Tribute to Nirjana Mam',
     content: 'With love and gratitude from Kaulii Gang',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    imageAlt: 'Teacher with students in a classroom setting'
+    imageUrl: 'https://i.ibb.co/9HMCFV/467170439-1213288213116320-3431643718854136907-n.jpg',
+    imageAlt: 'Kaulii Gang with Nirjana Mam'
   },
   {
     id: 2,
@@ -58,8 +58,8 @@ const pages: PageContent[] = [
     type: 'cover',
     title: 'Forever Grateful',
     content: 'With love and admiration, The Kaulii Gang',
-    imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    imageAlt: 'Graduation celebration image'
+    imageUrl: 'https://i.ibb.co/9HMCFV/467170439-1213288213116320-3431643718854136907-n.jpg',
+    imageAlt: 'Kaulii Gang with Nirjana Mam'
   }
 ];
 
