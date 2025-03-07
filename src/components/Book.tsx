@@ -61,13 +61,25 @@ export const Book = ({ pages, className }: BookProps) => {
     switch (page.type) {
       case 'cover':
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12">
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 animate-slide-down">
-              {page.title}
-            </h1>
-            <p className="font-serif text-lg md:text-xl italic text-muted-foreground animate-slide-up max-w-md mx-auto">
-              {page.content}
-            </p>
+          <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12 relative">
+            {page.imageUrl && (
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
+                <img 
+                  src={page.imageUrl} 
+                  alt={page.imageAlt || "Cover image"} 
+                  className="object-cover w-full h-full opacity-30"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.2)]"></div>
+              </div>
+            )}
+            <div className="relative z-10">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 animate-slide-down">
+                {page.title}
+              </h1>
+              <p className="font-serif text-lg md:text-xl italic text-muted-foreground animate-slide-up max-w-md mx-auto">
+                {page.content}
+              </p>
+            </div>
           </div>
         );
       
@@ -137,13 +149,18 @@ export const Book = ({ pages, className }: BookProps) => {
   };
 
   return (
-    <div className={cn("w-full max-w-4xl mx-auto book-page", className)}>
+    <div className={cn("w-full max-w-4xl mx-auto book-container", className)}>
+      <div className="book-spine"></div>
       <div className={cn(
         "relative bg-white rounded-lg overflow-hidden page-content h-[80vh] transition-all",
         fadeOut ? "opacity-0" : "opacity-100",
         turning === 'forward' ? "turning" : turning === 'backward' ? "turning-reverse" : ""
       )}>
         {renderPage(pages[currentPage])}
+        
+        {/* Page corners */}
+        <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-muted/40 to-transparent pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-muted/40 to-transparent pointer-events-none"></div>
         
         {/* Navigation buttons */}
         <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 items-center">
