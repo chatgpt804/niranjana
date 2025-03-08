@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Book, { PageContent } from '../components/Book';
 
@@ -15,21 +14,23 @@ const pages: PageContent[] = [
     id: 2,
     type: 'text',
     title: 'Dedication',
-    content: 'This tribute book is dedicated to Niranjana Mam, whose guidance, wisdom, and compassion have left an indelible mark on all of our lives.\n\nYour dedication to teaching goes beyond the classroom—you have taught us valuable life lessons that we will carry forever.\n\nThe following pages contain our heartfelt appreciation and memories that we cherish deeply.'
+    content: 'This tribute book is dedicated to Niranjana Mam, whose guidance, wisdom, and compassion have left an indelible mark on all of our lives.\n\nYour dedication to teaching goes beyond the classroom—you have taught us valuable life lessons that we will carry forever.\n\nThe following pages contain our heartfelt appreciation and memories that we cherish deeply.',
+    imageUrl: 'https://images.unsplash.com/photo-1577896851231-70ef18881754'
   },
   {
     id: 3,
     type: 'combined',
     title: 'A Teacher, A Mentor, A Friend',
     content: 'In the journey of education, some teachers become much more than instructors—they become guiding lights that illuminate our paths far beyond the classroom.\n\nNiranjana Mam, you have been that guiding light for us. Your patience in explaining complex concepts, your encouragement when we faced challenges, and your belief in our potential have empowered us to reach heights we never thought possible.\n\nYour wisdom has shaped not just our academic understanding, but our character and outlook on life.',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136',
     imageAlt: 'A beautiful classroom setting with books and flowers'
   },
   {
     id: 4,
     type: 'text',
     title: 'Lessons That Last a Lifetime',
-    content: 'The lessons we learned from you extend far beyond textbooks and examinations. You taught us the importance of perseverance, integrity, and kindness.\n\nYou showed us that making mistakes is part of learning, and that what truly matters is how we grow from them.\n\nYour classroom was a safe space where we felt valued, heard, and inspired to be our best selves.\n\nThe knowledge you imparted with such passion will continue to guide us through life\'s challenges and opportunities.\n\nFor these invaluable lessons, we are eternally grateful.'
+    content: 'The lessons we learned from you extend far beyond textbooks and examinations. You taught us the importance of perseverance, integrity, and kindness.\n\nYou showed us that making mistakes is part of learning, and that what truly matters is how we grow from them.\n\nYour classroom was a safe space where we felt valued, heard, and inspired to be our best selves.\n\nThe knowledge you imparted with such passion will continue to guide us through life\'s challenges and opportunities.\n\nFor these invaluable lessons, we are eternally grateful.',
+    imageUrl: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976'
   },
   {
     id: 5,
@@ -58,11 +59,11 @@ const pages: PageContent[] = [
         alt: 'With Niranjana Mam'
       },
       {
-        url: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+        url: 'https://images.unsplash.com/photo-1577896851231-70ef18881754',
         alt: 'Graduation celebration'
       },
       {
-        url: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+        url: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45',
         alt: 'Learning moments'
       }
     ]

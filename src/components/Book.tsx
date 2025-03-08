@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, FlipHorizontal, ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
+
+import { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, FlipHorizontal, ArrowLeftCircle, ArrowRightCircle, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -31,8 +32,34 @@ export const Book = ({ pages, className }: BookProps) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [showSwipeIndicators, setShowSwipeIndicators] = useState(false);
+  const [hasVisited, setHasVisited] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
+    // Check if this is the first visit
+    const visited = localStorage.getItem('hasVisitedBook');
+    if (!visited) {
+      localStorage.setItem('hasVisitedBook', 'true');
+      setHasVisited(false);
+    } else {
+      setHasVisited(true);
+    }
+
+    // Create audio element for welcome message
+    const audio = new Audio('/welcome-message.mp3');
+    audioRef.current = audio;
+    
+    // Play welcome audio on first visit (with user interaction)
+    const playAudio = () => {
+      if (!hasVisited && !isMuted && audioRef.current) {
+        audioRef.current.play().catch(e => console.log('Audio playback prevented:', e));
+      }
+      document.removeEventListener('click', playAudio);
+    };
+    
+    document.addEventListener('click', playAudio);
+    
     if (currentPage === 0) {
       toast("Welcome to the tribute book", {
         description: "Navigate through the pages using the arrows or swipe gestures",
@@ -44,8 +71,26 @@ export const Book = ({ pages, className }: BookProps) => {
       setShowSwipeIndicators(false);
     }, 3000);
 
-    return () => clearTimeout(timer);
-  }, [currentPage]);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', playAudio);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentPage, hasVisited, isMuted]);
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.play().catch(e => console.log('Audio playback prevented:', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  };
 
   const goToNextPage = () => {
     if (currentPage < pages.length - 1) {
@@ -121,7 +166,7 @@ export const Book = ({ pages, className }: BookProps) => {
     switch (page.type) {
       case 'cover':
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12 relative">
+          <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12 relative book-page">
             {page.imageUrl && (
               <div className="absolute inset-0 w-full h-full overflow-hidden">
                 <img 
@@ -145,14 +190,35 @@ export const Book = ({ pages, className }: BookProps) => {
       
       case 'text':
         return (
-          <div className="flex flex-col h-full px-8 py-12 overflow-y-auto hide-scrollbar">
-            {page.title && (
-              <h2 className="font-display text-3xl mb-6 animate-slide-down">{page.title}</h2>
-            )}
-            <div className="font-serif text-base md:text-lg space-y-4 animate-fade-in leading-relaxed">
-              {page.content?.split('\n').map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
+          <div className="flex flex-row h-full px-8 py-12 book-page">
+            <div className="w-full md:w-1/2 pr-6 overflow-y-auto hide-scrollbar">
+              {page.title && (
+                <h2 className="font-display text-3xl mb-6 animate-slide-down">{page.title}</h2>
+              )}
+              <div className="font-serif text-base md:text-lg space-y-4 animate-fade-in leading-relaxed">
+                {page.content?.split('\n').map((paragraph, idx) => (
+                  <p key={idx}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+            <div className="hidden md:flex w-1/2 items-center justify-center">
+              {page.imageUrl ? (
+                <div className="image-container overflow-hidden rounded-md animate-fade-in shadow-lg">
+                  <img 
+                    src={page.imageUrl || "https://images.unsplash.com/photo-1544717305-2782549b5136"} 
+                    alt={page.imageAlt || "Tribute image"} 
+                    className="object-cover w-full max-h-[50vh]"
+                  />
+                </div>
+              ) : (
+                <div className="image-container overflow-hidden rounded-md animate-fade-in shadow-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1544717305-2782549b5136" 
+                    alt="Default image" 
+                    className="object-cover w-full max-h-[50vh]"
+                  />
+                </div>
+              )}
             </div>
           </div>
         );
@@ -223,7 +289,9 @@ export const Book = ({ pages, className }: BookProps) => {
 
   return (
     <div className={cn("w-full max-w-4xl mx-auto book-container", className)}>
+      <div className="book-cover-left"></div>
       <div className="book-spine"></div>
+      <div className="book-cover-right"></div>
       <div 
         className={cn(
           "relative bg-white rounded-lg overflow-hidden page-content h-[80vh] transition-all",
@@ -236,6 +304,17 @@ export const Book = ({ pages, className }: BookProps) => {
         onTouchEnd={swipeMode ? handleTouchEnd : undefined}
       >
         {renderPage(pages[currentPage])}
+        
+        {/* Sound toggle button */}
+        <div className="absolute top-4 right-4 z-20">
+          <button 
+            onClick={toggleMute}
+            className="p-2 rounded-full bg-secondary/50 hover:bg-secondary/70 transition-colors"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
+        </div>
         
         <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-muted/40 to-transparent pointer-events-none"></div>
         <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-muted/40 to-transparent pointer-events-none"></div>
