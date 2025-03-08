@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, SwipeHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FlipHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -271,7 +271,7 @@ export const Book = ({ pages, className }: BookProps) => {
             className="w-10 h-10 rounded-full flex items-center justify-center glass transition-all ml-2 hover:bg-accent"
             aria-label="Toggle swipe mode"
           >
-            <SwipeHorizontal className="w-5 h-5" />
+            <FlipHorizontal className="w-5 h-5" />
           </button>
         </div>
       </div>
