@@ -145,6 +145,36 @@
   animation: page-turn-reverse 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
 }
 
+@keyframes page-turn {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: -10px 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: rotateY(-90deg) translateX(50%);
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: rotateY(-180deg) translateX(0);
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes page-turn-reverse {
+  0% {
+    transform: rotateY(-180deg) translateX(0);
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  }
+  50% {
+    transform: rotateY(-90deg) translateX(-50%);
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: rotateY(0deg);
+    box-shadow: -10px 10px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
 /* Hide scrollbar but allow scrolling */
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */
@@ -161,6 +191,16 @@
 
 .image-container:hover img {
   transform: scale(1.02);
+}
+
+.gallery-item {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.gallery-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.15);
 }
 
 .blur-backdrop {

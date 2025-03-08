@@ -1,16 +1,22 @@
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, SwipeHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
+export interface Image {
+  url: string;
+  alt: string;
+}
+
 export interface PageContent {
   id: number;
-  type: 'cover' | 'text' | 'image' | 'combined';
+  type: 'cover' | 'text' | 'image' | 'combined' | 'gallery';
   title?: string;
   content?: string;
   imageUrl?: string;
   imageAlt?: string;
+  images?: Image[];
 }
 
 interface BookProps {
@@ -22,11 +28,14 @@ export const Book = ({ pages, className }: BookProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [turning, setTurning] = useState<'forward' | 'backward' | null>(null);
   const [fadeOut, setFadeOut] = useState(false);
+  const [swipeMode, setSwipeMode] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
   
   useEffect(() => {
     if (currentPage === 0) {
-      toast("Welcome to the tribute book for Nirjana Mam", {
-        description: "Navigate through the pages using the arrows",
+      toast("Welcome to the tribute book for Niranjana Mam", {
+        description: "Navigate through the pages using the arrows or swipe gestures",
       });
     }
   }, []);
@@ -55,6 +64,52 @@ export const Book = ({ pages, className }: BookProps) => {
         setTurning(null);
       }, 500);
     }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 100) {
+      // Swipe left (next page)
+      goToNextPage();
+    }
+    
+    if (touchEnd - touchStart > 100) {
+      // Swipe right (previous page)
+      goToPreviousPage();
+    }
+  };
+
+  const toggleSwipeMode = () => {
+    setSwipeMode(!swipeMode);
+    toast(swipeMode ? "Traditional book view activated" : "Swipe mode activated", {
+      description: swipeMode ? "Use the arrows to navigate" : "Swipe left/right to turn pages",
+    });
+  };
+
+  const renderGallery = (images: Image[] = []) => {
+    return (
+      <div className="flex flex-col h-full items-center justify-center p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[75vh] overflow-y-auto hide-scrollbar">
+          {images.map((image, index) => (
+            <div key={index} className="gallery-item p-2 animate-fade-in rounded-lg shadow-md bg-white">
+              <img 
+                src={image.url} 
+                alt={image.alt} 
+                className="rounded object-cover w-full h-48 transition-all hover:scale-[1.02]"
+              />
+              <p className="text-center text-sm mt-2 text-muted-foreground">{image.alt}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   const renderPage = (page: PageContent) => {
@@ -143,6 +198,19 @@ export const Book = ({ pages, className }: BookProps) => {
           </div>
         );
       
+      case 'gallery':
+        return (
+          <div className="flex flex-col h-full px-8 py-8 overflow-y-auto hide-scrollbar">
+            {page.title && (
+              <h2 className="font-display text-3xl mb-4 text-center animate-slide-down">{page.title}</h2>
+            )}
+            {page.content && (
+              <p className="font-serif text-center mb-6 animate-fade-in">{page.content}</p>
+            )}
+            {page.images && renderGallery(page.images)}
+          </div>
+        );
+      
       default:
         return <div>Unknown page type</div>;
     }
@@ -151,11 +219,17 @@ export const Book = ({ pages, className }: BookProps) => {
   return (
     <div className={cn("w-full max-w-4xl mx-auto book-container", className)}>
       <div className="book-spine"></div>
-      <div className={cn(
-        "relative bg-white rounded-lg overflow-hidden page-content h-[80vh] transition-all",
-        fadeOut ? "opacity-0" : "opacity-100",
-        turning === 'forward' ? "turning" : turning === 'backward' ? "turning-reverse" : ""
-      )}>
+      <div 
+        className={cn(
+          "relative bg-white rounded-lg overflow-hidden page-content h-[80vh] transition-all",
+          fadeOut ? "opacity-0" : "opacity-100",
+          turning === 'forward' ? "turning" : turning === 'backward' ? "turning-reverse" : "",
+          swipeMode ? "cursor-grab active:cursor-grabbing" : ""
+        )}
+        onTouchStart={swipeMode ? handleTouchStart : undefined}
+        onTouchMove={swipeMode ? handleTouchMove : undefined}
+        onTouchEnd={swipeMode ? handleTouchEnd : undefined}
+      >
         {renderPage(pages[currentPage])}
         
         {/* Page corners */}
@@ -190,6 +264,14 @@ export const Book = ({ pages, className }: BookProps) => {
             aria-label="Next page"
           >
             <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={toggleSwipeMode}
+            className="w-10 h-10 rounded-full flex items-center justify-center glass transition-all ml-2 hover:bg-accent"
+            aria-label="Toggle swipe mode"
+          >
+            <SwipeHorizontal className="w-5 h-5" />
           </button>
         </div>
       </div>
