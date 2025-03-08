@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, FlipHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FlipHorizontal, ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -31,14 +30,22 @@ export const Book = ({ pages, className }: BookProps) => {
   const [swipeMode, setSwipeMode] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [showSwipeIndicators, setShowSwipeIndicators] = useState(false);
   
   useEffect(() => {
     if (currentPage === 0) {
-      toast("Welcome to the tribute book for Niranjana Mam", {
+      toast("Welcome to the tribute book", {
         description: "Navigate through the pages using the arrows or swipe gestures",
       });
     }
-  }, []);
+
+    setShowSwipeIndicators(true);
+    const timer = setTimeout(() => {
+      setShowSwipeIndicators(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
   const goToNextPage = () => {
     if (currentPage < pages.length - 1) {
@@ -76,12 +83,10 @@ export const Book = ({ pages, className }: BookProps) => {
 
   const handleTouchEnd = () => {
     if (touchStart - touchEnd > 100) {
-      // Swipe left (next page)
       goToNextPage();
     }
     
     if (touchEnd - touchStart > 100) {
-      // Swipe right (previous page)
       goToPreviousPage();
     }
   };
@@ -232,11 +237,37 @@ export const Book = ({ pages, className }: BookProps) => {
       >
         {renderPage(pages[currentPage])}
         
-        {/* Page corners */}
         <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-muted/40 to-transparent pointer-events-none"></div>
         <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-muted/40 to-transparent pointer-events-none"></div>
         
-        {/* Navigation buttons */}
+        {showSwipeIndicators && (
+          <>
+            {currentPage > 0 && (
+              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 swipe-indicator-left animate-pulse">
+                <button 
+                  onClick={goToPreviousPage}
+                  className="flex items-center justify-center h-12 w-12 rounded-r-full bg-primary/10 hover:bg-primary/20 transition-all duration-300 group"
+                  aria-label="Previous page"
+                >
+                  <ArrowLeftCircle className="w-8 h-8 text-primary/70 group-hover:text-primary transition-colors" />
+                </button>
+              </div>
+            )}
+            
+            {currentPage < pages.length - 1 && (
+              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 swipe-indicator-right animate-pulse">
+                <button 
+                  onClick={goToNextPage}
+                  className="flex items-center justify-center h-12 w-12 rounded-l-full bg-primary/10 hover:bg-primary/20 transition-all duration-300 group"
+                  aria-label="Next page"
+                >
+                  <ArrowRightCircle className="w-8 h-8 text-primary/70 group-hover:text-primary transition-colors" />
+                </button>
+              </div>
+            )}
+          </>
+        )}
+        
         <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 items-center">
           <button
             onClick={goToPreviousPage}

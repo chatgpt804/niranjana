@@ -223,3 +223,29 @@
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
+/* New swipe arrow indicators */
+.swipe-indicator-left {
+  transform: translateX(-10px);
+  animation: slide-in-left 0.5s ease forwards, pulse 2s infinite;
+}
+
+.swipe-indicator-right {
+  transform: translateX(10px);
+  animation: slide-in-right 0.5s ease forwards, pulse 2s infinite;
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-20px) translateY(-50%); opacity: 0; }
+  to { transform: translateX(0) translateY(-50%); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(20px) translateY(-50%); opacity: 0; }
+  to { transform: translateX(0) translateY(-50%); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
