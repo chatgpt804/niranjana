@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import Book, { PageContent } from '../components/Book';
 
@@ -87,6 +88,18 @@ const pages: PageContent[] = [
 const Index = () => {
   useEffect(() => {
     document.title = "A Tribute to Niranjana Mam";
+    
+    // Try to play audio as soon as the page loads
+    const audio = new Audio('/welcome-message.mp3');
+    const playPromise = audio.play();
+    
+    // Handle potential play() rejection (browsers often block autoplay)
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.log('Auto-play was prevented:', error);
+        // We'll rely on the Book component's audio handling as fallback
+      });
+    }
   }, []);
 
   return (

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, FlipHorizontal, ArrowLeftCircle, ArrowRightCircle, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -50,15 +49,10 @@ export const Book = ({ pages, className }: BookProps) => {
     const audio = new Audio('/welcome-message.mp3');
     audioRef.current = audio;
     
-    // Play welcome audio on first visit (with user interaction)
-    const playAudio = () => {
-      if (!hasVisited && !isMuted && audioRef.current) {
-        audioRef.current.play().catch(e => console.log('Audio playback prevented:', e));
-      }
-      document.removeEventListener('click', playAudio);
-    };
-    
-    document.addEventListener('click', playAudio);
+    // Auto-play welcome audio on page load without requiring user interaction
+    if (!hasVisited && audioRef.current) {
+      audioRef.current.play().catch(e => console.log('Audio playback prevented:', e));
+    }
     
     if (currentPage === 0) {
       toast("Welcome to the tribute book", {
@@ -73,13 +67,12 @@ export const Book = ({ pages, className }: BookProps) => {
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('click', playAudio);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
     };
-  }, [currentPage, hasVisited, isMuted]);
+  }, [currentPage, hasVisited]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -101,7 +94,7 @@ export const Book = ({ pages, className }: BookProps) => {
         setCurrentPage(prevPage => prevPage + 1);
         setFadeOut(false);
         setTurning(null);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -114,7 +107,7 @@ export const Book = ({ pages, className }: BookProps) => {
         setCurrentPage(prevPage => prevPage - 1);
         setFadeOut(false);
         setTurning(null);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -127,19 +120,19 @@ export const Book = ({ pages, className }: BookProps) => {
   };
 
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 100) {
+    if (touchStart - touchEnd > 70) {
       goToNextPage();
     }
     
-    if (touchEnd - touchStart > 100) {
+    if (touchEnd - touchStart > 70) {
       goToPreviousPage();
     }
   };
 
   const toggleSwipeMode = () => {
     setSwipeMode(!swipeMode);
-    toast(swipeMode ? "Traditional book view activated" : "Swipe mode activated", {
-      description: swipeMode ? "Use the arrows to navigate" : "Swipe left/right to turn pages",
+    toast(swipeMode ? "Traditional book view activated" : "3D swipe mode activated", {
+      description: swipeMode ? "Use the arrows to navigate" : "Swipe left/right to turn pages in 3D",
     });
   };
 
@@ -296,8 +289,8 @@ export const Book = ({ pages, className }: BookProps) => {
         className={cn(
           "relative bg-white rounded-lg overflow-hidden page-content h-[80vh] transition-all",
           fadeOut ? "opacity-0" : "opacity-100",
-          turning === 'forward' ? "turning" : turning === 'backward' ? "turning-reverse" : "",
-          swipeMode ? "cursor-grab active:cursor-grabbing" : ""
+          turning === 'forward' ? "turning-3d-forward" : turning === 'backward' ? "turning-3d-backward" : "",
+          swipeMode ? "cursor-grab active:cursor-grabbing transform-3d" : ""
         )}
         onTouchStart={swipeMode ? handleTouchStart : undefined}
         onTouchMove={swipeMode ? handleTouchMove : undefined}
@@ -322,7 +315,7 @@ export const Book = ({ pages, className }: BookProps) => {
         {showSwipeIndicators && (
           <>
             {currentPage > 0 && (
-              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 swipe-indicator-left animate-pulse">
+              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 swipe-indicator-left">
                 <button 
                   onClick={goToPreviousPage}
                   className="flex items-center justify-center h-12 w-12 rounded-r-full bg-primary/10 hover:bg-primary/20 transition-all duration-300 group"
@@ -334,7 +327,7 @@ export const Book = ({ pages, className }: BookProps) => {
             )}
             
             {currentPage < pages.length - 1 && (
-              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 swipe-indicator-right animate-pulse">
+              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 swipe-indicator-right">
                 <button 
                   onClick={goToNextPage}
                   className="flex items-center justify-center h-12 w-12 rounded-l-full bg-primary/10 hover:bg-primary/20 transition-all duration-300 group"
@@ -379,7 +372,7 @@ export const Book = ({ pages, className }: BookProps) => {
           <button
             onClick={toggleSwipeMode}
             className="w-10 h-10 rounded-full flex items-center justify-center glass transition-all ml-2 hover:bg-accent"
-            aria-label="Toggle swipe mode"
+            aria-label="Toggle 3D swipe mode"
           >
             <FlipHorizontal className="w-5 h-5" />
           </button>
